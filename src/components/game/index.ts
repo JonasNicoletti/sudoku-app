@@ -1,3 +1,3 @@
-import Grid from "./Grid";
+import Game from "./Game";
 
-export default Grid
+export default Game

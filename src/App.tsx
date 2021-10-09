@@ -1,9 +1,10 @@
-import Grid from "./components/game";
+import Game from "./components/game";
+import { GameSize } from "./models";
 
 function App() {
   return (
     <div className="App">
-      <Grid size={9} />
+      <Game size={GameSize.normal} />
     </div>
   );
 }

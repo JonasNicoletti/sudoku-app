@@ -21,12 +21,14 @@ body {
   grid-auto-flow: column;
   border-top: 1px solid $line-color;
   border-left: 2px solid $dark-line-color;
-  border-right: 2px solid $dark-line-color;
   &:last-child {
     border-bottom: 2px solid $dark-line-color;
   }
   &:first-child {
     border-top: 2px solid $dark-line-color;
+  }
+  &.border {
+    border-bottom: 2px solid $dark-line-color;
   }
 }
 .cell {
@@ -35,6 +37,9 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  &.border {
+    border-right: 2px solid $dark-line-color;
+  }
 }
 
 code {

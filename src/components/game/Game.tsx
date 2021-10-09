@@ -1,6 +1,11 @@
+import { GameSize } from "../../models";
 import Row from "./Row";
 
-function Grid({ size }: { size: number }) {
+type GameProps = {
+  size: GameSize;
+};
+
+function Game({ size }: GameProps) {
   const grid = [];
 
   for (let rowIndex = 0; rowIndex < size; rowIndex++) {
@@ -9,4 +14,4 @@ function Grid({ size }: { size: number }) {
   return <div className="grid">{grid.map((row) => row)}</div>;
 }
 
-export default Grid;
+export default Game;
