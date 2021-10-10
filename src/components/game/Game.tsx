@@ -1,11 +1,9 @@
-import { GameSize } from "../../models";
+import useStore from "../../store";
 import Row from "./Row";
 
-type GameProps = {
-  size: GameSize;
-};
+function Game() {
+  const size = useStore((state) => state.size);
 
-function Game({ size }: GameProps) {
   const grid = [];
 
   for (let rowIndex = 0; rowIndex < size; rowIndex++) {

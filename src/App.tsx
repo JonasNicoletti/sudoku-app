@@ -1,10 +1,11 @@
+import ControlPanel from "./components/control-panel";
 import Game from "./components/game";
-import { GameSize } from "./models";
 
 function App() {
   return (
-    <div className="App">
-      <Game size={GameSize.normal} />
+    <div className="app">
+      <Game />
+      <ControlPanel />
     </div>
   );
 }
