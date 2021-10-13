@@ -7,7 +7,7 @@ function SizeController() {
       <h3>Size</h3>
       <SizeButton displaySize={GameSize.small} />
       <SizeButton displaySize={GameSize.normal} />
-      <SizeButton displaySize={GameSize.large} />
+      {/* <SizeButton displaySize={GameSize.large} /> */}
     </div>
   );
 }
