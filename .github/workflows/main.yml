@@ -37,7 +37,7 @@ jobs:
         run: npm install
 
       - name: Build
-        run: npm predeploy
+        run: npm run predeploy
         
       - name: Deploy
-        run: npm deploy
+        run: npm run deploy
