@@ -1,4 +1,4 @@
-import { GameSize } from "../models";
+import { CellModel, GameSize } from "../models";
 
 type SquareRange = {
   from: number,
@@ -8,7 +8,7 @@ type SquareRange = {
 let counter = 0;
 
 
-function generateGame(size: GameSize): number[][] {
+function generateGame(size: GameSize): CellModel[][] {
   const grid = new Array(size)
     .fill(0)
     .map(() => new Array(size).fill(0));
@@ -34,7 +34,7 @@ function generateGame(size: GameSize): number[][] {
     }
   }
 
-  return grid;
+  return grid.map(row => row.map(v => { return { value: v, isCorrect: v !== 0, isDeletable: v === 0 } as CellModel }));
 
 }
 

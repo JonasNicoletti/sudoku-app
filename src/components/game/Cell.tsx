@@ -30,7 +30,7 @@ function Cell({ row, column, hasBorder }: CellProps) {
   Modal.setAppElement("#root");
   const { getCell, setCell, size } = useStore((state) => state);
   const [isActive, setIsActive] = useState(false);
-  const value = getCell(row, column);
+  const { value, isDeletable } = getCell(row, column);
   const dial = [];
   for (let index = 0; index < size + 1; index++) {
     dial.push(
@@ -49,8 +49,8 @@ function Cell({ row, column, hasBorder }: CellProps) {
     <div
       className={`cell ${hasBorder ? "border" : ""} ${
         isActive ? "active" : ""
-      }`}
-      onClick={() => setIsActive(!isActive)}
+      } ${isDeletable ? "" : "fix"}`}
+      onClick={() => setIsActive(isDeletable && !isActive)}
     >
       {getReadableValue(value)}
       <Modal

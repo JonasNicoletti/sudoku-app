@@ -4,3 +4,9 @@ export enum GameSize {
   //FIXME: NOT PERFORMANT ENOUGH
   // large = 16, 
 }
+
+export interface CellModel {
+  value: number
+  isDeletable: boolean
+  isCorrect: boolean
+}

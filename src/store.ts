@@ -1,7 +1,7 @@
 import create from "zustand"
 import { GetState, SetState } from "zustand";
 
-import { GameSize } from "./models"
+import { CellModel, GameSize } from "./models"
 import { generateGame, isValidValue } from "./utils/grid-operations";
 
 const INITIAL_SIZE = GameSize.normal
@@ -12,14 +12,14 @@ interface SizeState {
 const createSize = (set: SetState<GameState>, get: GetState<GameState>) => ({
   size: INITIAL_SIZE,
   setSize: (size: GameSize) => set(() => ({
-    size: size, grid: generateGame(size,)
+    size: size, grid: generateGame(size)
   })),
 });
 
 interface GridState {
-  grid: number[][]
+  grid: CellModel[][]
   setGrid: (size: GameSize) => void;
-  getCell: (row: number, column: number) => number;
+  getCell: (row: number, column: number) => CellModel;
   setCell: (row: number, column: number, value: number) => boolean;
 }
 
@@ -32,15 +32,15 @@ const createGrid = (set: SetState<GameState>, get: GetState<GameState>) => ({
     return get().grid[row][column]
   },
   setCell: (row: number, column: number, value: number) => {
+    const isSolvable = true;
+    const grid = get().grid
     const size = get().size;
-    const toValidateGrid = get().grid;
-    const isSolvable = value === 0 || isValidValue(toValidateGrid, row, column, value, size);
-    if (isSolvable) {
-      toValidateGrid[row][column] = value;
-      set({
-        grid: toValidateGrid
-      });
-    }
+    grid[row][column].value = value
+    const numberGrid = grid.map(r => r.map(v => v.value));
+    grid[row][column].isCorrect = isValidValue(numberGrid, row, column, value, size)
+    set({
+      grid: grid
+    })
     return isSolvable;
   }
 })
