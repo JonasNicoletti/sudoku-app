@@ -11,9 +11,16 @@ interface SizeState {
 }
 const createSize = (set: SetState<GameState>, get: GetState<GameState>) => ({
   size: INITIAL_SIZE,
-  setSize: (size: GameSize) => set(() => ({
-    size: size, grid: generateGame(size)
-  })),
+  setSize: (size: GameSize) => {
+    set({
+      size: size,
+    })
+    if (get().isNew) {
+      set({
+        grid: generateGame(size)
+      })
+    }
+  },
 });
 
 interface GridState {
@@ -45,13 +52,36 @@ const createGrid = (set: SetState<GameState>, get: GetState<GameState>) => ({
   }
 })
 
+interface ControllerState {
+  isRunning: boolean;
+  setIsRunning: (isRunning: boolean) => void;
+  isNew: boolean;
+  setIsNew: (isNew: boolean) => void;
+}
 
+const createController = (set: SetState<GameState>, get: GetState<GameState>) => ({
+  isRunning: false,
+  setIsRunning: (isRunning: boolean) => set({ isRunning: isRunning }),
+  isNew: true,
+  setIsNew: (isNew: boolean) => {
+    if (isNew) {
+      set({
+        grid: generateGame(get().size)
+      })
+    }
+    set({
+      isNew: isNew
+    })
 
-export type GameState = SizeState & GridState;
+  }
+})
+
+export type GameState = SizeState & GridState & ControllerState;
 
 const useStore = create<GameState>((set, get) => ({
   ...createSize(set, get),
-  ...createGrid(set, get)
+  ...createGrid(set, get),
+  ...createController(set, get),
 }));
 
 

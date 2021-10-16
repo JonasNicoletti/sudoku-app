@@ -32,11 +32,15 @@ body {
 .control-panel {
   margin-left: 1rem;
 }
-.size-controller {
+.control-panel-header {
   display: flex;
   flex-direction: row;
+  h2 {
+    margin-right: 1rem;
+  }
 }
-.size-controller-button {
+.button-controller-button {
+  cursor: pointer;
   border: none;
   padding: 1rem;
   text-align: center;
@@ -85,6 +89,15 @@ body {
   &.fix {
     font-weight: 800;
   }
+  span {
+    &.blur {
+      -webkit-filter: blur(0.125rem);
+      -moz-filter: blur(0.1rem);
+      -o-filter: blur(0.1rem);
+      -ms-filter: blur(0.1rem);
+      filter: blur(0.3rem);
+    }
+  }
 }
 .value-input {
   border: 1px solid $line-color;
@@ -99,4 +112,50 @@ body {
   align-items: center;
   cursor: pointer;
   flex: 0 0 21%;
+}
+
+.clock {
+  height: 3rem;
+  font-size: 3rem;
+  font-family: sans-serif;
+  display: flex;
+  position: relative;
+  /*background: green;*/
+  overflow: hidden;
+}
+
+.clock::before,
+.clock::after {
+  content: "";
+  width: 1rem;
+  height: 2rem;
+  position: absolute;
+  z-index: 2;
+}
+
+.clock::after {
+  bottom: 0;
+}
+
+.clock > div {
+  display: flex;
+}
+.tick {
+  line-height: 1;
+}
+.tick-hidden {
+  opacity: 0;
+}
+
+.move {
+  animation: move linear 1s infinite;
+}
+
+@keyframes move {
+  from {
+    transform: translateY(0vh);
+  }
+  to {
+    transform: translateY(-20vh);
+  }
 }

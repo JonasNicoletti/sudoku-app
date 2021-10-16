@@ -28,10 +28,11 @@ const getReadableValue = (value: number) => {
 
 function Cell({ row, column, hasBorder }: CellProps) {
   Modal.setAppElement("#root");
-  const { getCell, setCell, size } = useStore((state) => state);
+  const { getCell, setCell, size, isNew } = useStore((state) => state);
   const [isActive, setIsActive] = useState(false);
   const { value, isDeletable } = getCell(row, column);
   const dial = [];
+
   for (let index = 0; index < size + 1; index++) {
     dial.push(
       <div
@@ -52,7 +53,7 @@ function Cell({ row, column, hasBorder }: CellProps) {
       } ${isDeletable ? "" : "fix"}`}
       onClick={() => setIsActive(isDeletable && !isActive)}
     >
-      {getReadableValue(value)}
+      <span className={isNew ? "blur" : ""}>{getReadableValue(value)}</span>
       <Modal
         isOpen={isActive}
         onAfterClose={() => setIsActive(false)}
