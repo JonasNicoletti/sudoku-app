@@ -1,4 +1,3 @@
-import useStore from "../../store";
 import Cell from "./Cell";
 
 type RowProps = {
@@ -7,14 +6,14 @@ type RowProps = {
 };
 
 function Row({ index, size }: RowProps) {
-  const { getCell } = useStore((state) => state);
   const row = [];
   for (let columnIndex = 0; columnIndex < size; columnIndex++) {
     const cell = (
       <Cell
         key={columnIndex}
-        value={getCell(index, columnIndex)}
         hasBorder={isSection(columnIndex, size)}
+        row={index}
+        column={columnIndex}
       />
     );
     row.push(cell);

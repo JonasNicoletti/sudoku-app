@@ -161,6 +161,36 @@ function checkGrid(grid: number[][]) {
   return true;
 }
 
+function isValidValue(grid: number[][], row: number, column: number, value: number, size: GameSize): boolean {
+  const squareSize = Math.sqrt(size);
+  const separators: SquareRange[] = Array.from({ length: squareSize }, (_, i) => { return { from: i * squareSize, to: (i + 1) * squareSize } });
+  if (!grid[row].includes(value)) {
+    const columnValues = grid.map((r) => r[column]);
+    // check if value fits column
+    if (!columnValues.includes(value)) {
+      // check if value fits square
+      const square: number[] = [];
+
+      for (const rowSep of separators) {
+        if (row >= rowSep.from && row < rowSep.to) {
+          for (const colSep of separators) {
+            if (column >= colSep.from && column < colSep.to) {
+              for (let r = rowSep.from; r < rowSep.to; r++) {
+                for (let c = colSep.from; c < colSep.to; c++) {
+                  square.push(grid[r][c])
+                }
+              }
+            }
+          }
+        }
+      }
+      if (!square.includes(value)) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
 function shuffle(a: Array<number>) {
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -174,4 +204,4 @@ function getRandom(array: Array<number>): number {
 }
 
 
-export { generateGame }
+export { generateGame, isValidValue }
