@@ -2,7 +2,7 @@ import useStore from "../../../store";
 import ButtonController from "../ButtonController";
 
 function GameController() {
-  const { isRunning, setIsRunning, isNew, setIsNew } = useStore();
+  const { isRunning, setIsRunning, isNew, setIsNew, hint } = useStore();
 
   return (
     <>
@@ -23,6 +23,11 @@ function GameController() {
         }}
         isActive={false}
         disabled={isNew}
+      />
+      <ButtonController
+        displayName="Hint"
+        onClick={() => hint()}
+        isActive={false}
       />
     </>
   );

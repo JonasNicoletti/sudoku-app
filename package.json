@@ -48,7 +48,8 @@
   },
   "devDependencies": {
     "@types/react-modal": "^3.13.1",
-    "gh-pages": "^3.2.3"
+    "gh-pages": "^3.2.3",
+    "simple-zustand-devtools": "^1.0.1"
   },
   "homepage": "http://JonasNicoletti.github.io/sudoku-app"
 }

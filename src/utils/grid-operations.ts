@@ -1,4 +1,4 @@
-import { CellModel, GameSize } from "../models";
+import { CellModel, GameModel, GameSize } from "../models";
 
 type SquareRange = {
   from: number,
@@ -8,12 +8,13 @@ type SquareRange = {
 let counter = 0;
 
 
-function generateGame(size: GameSize): CellModel[][] {
+function generateGame(size: GameSize): GameModel {
   const grid = new Array(size)
     .fill(0)
     .map(() => new Array(size).fill(0));
 
   fillGrid(size, grid);
+  const solvedGrid = deepCopy(grid)
   let attempts = 0;
   while (attempts < 5) {
     let r = getRandom(Array.from(Array(size).keys()))
@@ -25,7 +26,7 @@ function generateGame(size: GameSize): CellModel[][] {
     const backup = grid[r][c]
     grid[r][c] = 0
 
-    const copyGrid = [...grid]
+    const copyGrid = deepCopy(grid)
     counter = 0
     solveGrid(size, copyGrid)
     if (counter !== 1) {
@@ -33,8 +34,10 @@ function generateGame(size: GameSize): CellModel[][] {
       attempts += 1
     }
   }
-
-  return grid.map(row => row.map(v => { return { value: v, isCorrect: v !== 0, isDeletable: v === 0 } as CellModel }));
+  return {
+    solvedGrid: solvedGrid,
+    grid: grid.map(row => row.map(v => { return { value: v, isCorrect: v !== 0, isDeletable: v === 0 } as CellModel }))
+  } 
 
 }
 
@@ -161,6 +164,20 @@ function checkGrid(grid: number[][]) {
   return true;
 }
 
+function isGameSolved(grid: CellModel[][]): boolean {
+  for (const row of grid) {
+    for (const value of row) {
+      if (!value.isCorrect || value.value === 0) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+
+
+
 function isValidValue(grid: number[][], row: number, column: number, value: number, size: GameSize): boolean {
   const squareSize = Math.sqrt(size);
   const separators: SquareRange[] = Array.from({ length: squareSize }, (_, i) => { return { from: i * squareSize, to: (i + 1) * squareSize } });
@@ -203,5 +220,23 @@ function getRandom(array: Array<number>): number {
   return array[Math.floor(Math.random() * array.length)];
 }
 
+export const deepCopy = <T>(target: T): T => {
+  if (target === null) {
+    return target;
+  }
+  if (target instanceof Array) {
+    const cp = [] as any[];
+    (target as any[]).forEach((v) => { cp.push(v); });
+    return cp.map((n: any) => deepCopy<any>(n)) as any;
+  }
+  if (typeof target === 'object' && target !== {}) {
+    const cp = { ...(target as { [key: string]: any }) } as { [key: string]: any };
+    Object.keys(cp).forEach(k => {
+      cp[k] = deepCopy<any>(cp[k]);
+    });
+    return cp as T;
+  }
+  return target;
+};
 
-export { generateGame, isValidValue }
+export { generateGame, isValidValue, isGameSolved }

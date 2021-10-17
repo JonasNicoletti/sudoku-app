@@ -10,3 +10,8 @@ export interface CellModel {
   isDeletable: boolean
   isCorrect: boolean
 }
+
+export interface GameModel {
+  solvedGrid: number[][]
+  grid: CellModel[][]
+}
