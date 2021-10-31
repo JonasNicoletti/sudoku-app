@@ -7,7 +7,7 @@ import { useMutation } from "react-query";
 import { toTime } from "../../utils/timeutils";
 
 function UploadRecord() {
-  const { setState, time, gameId, hints, addRecord } = useStore();
+  const { setState, time, gameId, hints } = useStore();
   const [userName, setUserName] = useState<string>("");
 
   const axiosClient = axios.create({
