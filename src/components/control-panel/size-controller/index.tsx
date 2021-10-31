@@ -1,23 +1,21 @@
 import { GameSize } from "../../../models";
 import useStore from "../../../store";
-import ButtonController from "../ButtonController";
+import CustomButton from "../../common/ButtonController";
 
 function SizeController() {
-  const { size, setSize, isRunning } = useStore();
+  const { size, setSize } = useStore();
 
   return (
     <div className="size-controller">
-      <ButtonController
+      <CustomButton
         displayName={GameSize[GameSize.small]}
         onClick={() => setSize(GameSize.small)}
         isActive={size === GameSize.small}
-        disabled={isRunning}
       />
-      <ButtonController
+      <CustomButton
         displayName={GameSize[GameSize.normal]}
         onClick={() => setSize(GameSize.normal)}
         isActive={size === GameSize.normal}
-        disabled={isRunning}
       />
       {/* <SizeButton displaySize={GameSize.large} /> */}
     </div>

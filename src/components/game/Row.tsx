@@ -1,26 +1,30 @@
+import { CellModel } from "../../models";
 import Cell from "./Cell";
 
 type RowProps = {
   index: number;
-  size: number;
+  row: CellModel[];
 };
 
-function Row({ index, size }: RowProps) {
-  const row = [];
-  for (let columnIndex = 0; columnIndex < size; columnIndex++) {
+function Row({ index, row }: RowProps) {
+  const cellGrid = [];
+  for (let columnIndex = 0; columnIndex < row.length; columnIndex++) {
     const cell = (
       <Cell
         key={columnIndex}
-        hasBorder={isSection(columnIndex, size)}
+        hasBorder={isSection(columnIndex, row.length)}
         row={index}
         column={columnIndex}
+        size={row.length}
+        value={row[columnIndex].value}
+        isDeletable={row[columnIndex].isDeletable}
       />
     );
-    row.push(cell);
+    cellGrid.push(cell);
   }
   return (
-    <div className={isSection(index, size) ? "row border" : "row"}>
-      {row.map((c) => c)}
+    <div className={isSection(index, row.length) ? "row border" : "row"}>
+      {cellGrid.map((c) => c)}
     </div>
   );
 }

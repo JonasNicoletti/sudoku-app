@@ -1,21 +1,23 @@
 import { useEffect } from "react";
 import { useStopwatch } from "react-timer-hook";
+import { GameState } from "../../../models";
 import useStore from "../../../store";
 
 function Timer() {
-  const { isRunning } = useStore();
+  const { state, setTime, hints } = useStore();
   const { seconds, minutes, pause, reset } = useStopwatch({
     autoStart: false,
   });
 
   useEffect(() => {
-    if (isRunning) {
+    if (state === GameState.RUNNING) {
       reset();
     } else {
       pause();
+      setTime(seconds + minutes * 60);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isRunning]);
+  }, [state]);
   return (
     <div className="clock">
       <div className="minutes">
@@ -33,6 +35,15 @@ function Timer() {
         </div>
         <div className="second infinite">
           <div className="number">{seconds % 10}</div>
+        </div>
+      </div>
+      <div className="hint_plus">+</div>
+      <div className="hint_seconds">
+        <div className="first">
+          <div className="number">{Math.floor((hints * 30) / 10)}</div>
+        </div>
+        <div className="second infinite">
+          <div className="number">{(hints * 30) % 10}</div>
         </div>
       </div>
     </div>

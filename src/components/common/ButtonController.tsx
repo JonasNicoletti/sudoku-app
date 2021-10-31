@@ -1,4 +1,4 @@
-function ButtonController({
+function CustomButton({
   displayName,
   onClick,
   isActive,
@@ -6,7 +6,7 @@ function ButtonController({
 }: {
   displayName: string;
   onClick: () => void;
-  isActive: boolean;
+  isActive?: boolean;
   disabled?: boolean;
 }) {
   return (
@@ -19,4 +19,4 @@ function ButtonController({
     />
   );
 }
-export default ButtonController;
+export default CustomButton;

@@ -1,33 +1,42 @@
+import { GameState } from "../../../models";
 import useStore from "../../../store";
-import ButtonController from "../ButtonController";
+import CustomButton from "../../common/ButtonController";
 
 function GameController() {
-  const { isRunning, setIsRunning, isNew, setIsNew, hint } = useStore();
+  const { state, setState, hint } = useStore();
 
   return (
     <>
-      <ButtonController
-        displayName="Start"
+      <CustomButton
+        displayName={state === GameState.RUNNING ? "Stop" : "Start"}
         onClick={() => {
-          setIsRunning(true);
-          setIsNew(false);
+          if (state !== GameState.RUNNING) {
+            setState(GameState.RUNNING);
+          } else {
+            setState(GameState.STOPPED);
+          }
         }}
         isActive={false}
-        disabled={isRunning}
+        disabled={
+          state === GameState.EMPTY ||
+          state === GameState.FETCHING ||
+          state === GameState.FINISHED ||
+          state === GameState.STOPPED
+        }
       />
-      <ButtonController
-        displayName="New"
+      <CustomButton
+        displayName="New Game"
         onClick={() => {
-          setIsRunning(false);
-          setIsNew(true);
+          setState(GameState.NEW);
         }}
         isActive={false}
-        disabled={isNew}
+        disabled={state === GameState.RUNNING}
       />
-      <ButtonController
+      <CustomButton
         displayName="Hint"
         onClick={() => hint()}
         isActive={false}
+        disabled={state !== GameState.RUNNING}
       />
     </>
   );

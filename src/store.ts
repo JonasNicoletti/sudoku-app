@@ -2,23 +2,25 @@ import create from "zustand"
 import { mountStoreDevtool } from 'simple-zustand-devtools';
 import { GetState, SetState } from "zustand";
 
-import { CellModel, GameSize } from "./models"
-import { generateGame, isValidValue, isGameSolved } from "./utils/grid-operations";
+import { CellModel, GameDto, GameSize, GameState, RecordDto } from "./models"
+import { isValidValue, isGameSolved, getEmptyGrid, gridToGameModel } from "./utils/grid-operations";
+import axios from "axios";
+
+const axiosClient = axios.create({
+  baseURL: process.env.REACT_APP_BACKEND_URI,
+});
 
 const INITIAL_SIZE = GameSize.normal
-const { solvedGrid: INITIAL_SOLVED_GRID, grid: INITIAL_GRID } = generateGame(INITIAL_SIZE)
+const { solvedGrid: INITIAL_SOLVED_GRID, grid: INITIAL_GRID } = getEmptyGrid(INITIAL_SIZE)
 
 interface SizeState {
   size: GameSize;
   setSize: (size: GameSize) => void;
 }
-const createSize = (set: SetState<GameState>, get: GetState<GameState>) => ({
+const createSize = (set: SetState<State>, get: GetState<State>) => ({
   size: INITIAL_SIZE,
   setSize: (size: GameSize) => {
-    const { solvedGrid, grid } = generateGame(size);
     set({
-      solvedGrid: solvedGrid,
-      grid: grid,
       size: size,
     })
   },
@@ -27,66 +29,94 @@ const createSize = (set: SetState<GameState>, get: GetState<GameState>) => ({
 interface GridState {
   solvedGrid: number[][];
   grid: CellModel[][];
-  setGrid: (size: GameSize) => void;
+  gameId: string | undefined;
+  records: RecordDto[];
+  setGrid: (dto: GameDto) => void;
   getCell: (row: number, column: number) => CellModel;
-  setCell: (row: number, column: number, value: number) => boolean;
+  setCell: (row: number, column: number, value: number) => void;
 }
 
-const createGrid = (set: SetState<GameState>, get: GetState<GameState>) => ({
+const createGrid = (set: SetState<State>, get: GetState<State>) => ({
   solvedGrid: INITIAL_SOLVED_GRID,
   grid: INITIAL_GRID,
-  setGrid: (size: GameSize) => {
-    const { solvedGrid, grid } = generateGame(size);
+  gameId: undefined,
+  records: [],
+  setGrid: ({ grid, solvedGrid, id, size, records }: GameDto) => {
     set(() => ({
       solvedGrid: solvedGrid,
-      grid: grid
+      grid: gridToGameModel(grid),
+      gameId: id,
+      records: records,
+      state: GameState.NEW,
+      size: size
     }))
   },
   getCell: (row: number, column: number) => {
     return get().grid[row][column]
   },
   setCell: (row: number, column: number, value: number) => {
-    const isSolvable = true;
     const grid = get().grid
     const size = get().size;
     const numberGrid = grid.map(r => r.map(v => v.value));
     grid[row][column].isCorrect = isValidValue(numberGrid, row, column, value, size);
     grid[row][column].value = value
     const gameOver = isGameSolved(grid)
-    set({
-      grid: grid,
-      isRunning: !gameOver,
-      isOver: gameOver
-    })
-    return isSolvable;
+    if (gameOver) {
+      set({
+        state: GameState.FINISHED,
+        grid: grid
+      })
+    } else {
+      set({
+        grid: grid,
+      })
+    }
   }
 })
 
 interface ControllerState {
-  isOver: boolean;
-  isRunning: boolean;
-  setIsRunning: (isRunning: boolean) => void;
-  isNew: boolean;
-  setIsNew: (isNew: boolean) => void;
+  state: GameState;
+  time: number;
+  hints: number;
+  setState: (state: GameState, gameId?: string) => void;
   hint: () => void;
+  setTime: (time: number) => void;
+  addRecord: (record: RecordDto) => void;
 }
 
-const createController = (set: SetState<GameState>, get: GetState<GameState>) => ({
-  isOver: false,
-  isRunning: false,
-  setIsRunning: (isRunning: boolean) => set({ isRunning: isRunning }),
-  isNew: true,
-  setIsNew: (isNew: boolean) => {
-    if (isNew) {
-      const { solvedGrid, grid } = generateGame(get().size);
+const createController = (set: SetState<State>, get: GetState<State>) => ({
+  state: GameState.EMPTY,
+  time: 0,
+  hints: 0,
+  setState: async (state: GameState, gameId?: string) => {
+    if (state === GameState.NEW) {
+      if (gameId) {
+        const { data: { records }, } = await axiosClient.get<GameDto>(`/games/${gameId}`)
+        set({
+          state: state,
+          records: records,
+          hints: 0,
+        })
+
+      } else {
+        const { data: { grid, id, solvedGrid, size, records }, } = await axiosClient.get<GameDto>(`/games/random/${get().size}`)
+        set({
+          state: state,
+          grid: gridToGameModel(grid),
+          solvedGrid: solvedGrid,
+          size: size,
+          gameId: id,
+          records: records,
+          hints: 0,
+        })
+
+      }
+
+    } else {
       set({
-        solvedGrid: solvedGrid,
-        grid: grid
+        state: state
       })
     }
-    set({
-      isNew: isNew
-    })
   },
   hint: () => {
     const { solvedGrid, grid } = get();
@@ -103,17 +133,34 @@ const createController = (set: SetState<GameState>, get: GetState<GameState>) =>
       }
     }
     const isOver = isGameSolved(grid)
+    if (isOver) {
+      set({
+        state: GameState.FINISHED,
+        grid: grid,
+        hints: get().hints + 1
+      })
+    } else {
+      set({
+        grid: grid,
+        hints: get().hints + 1
+      })
+    }
+  },
+  setTime: (time: number) => {
     set({
-      grid: grid,
-      isOver: isOver,
-      isRunning: !isOver,
+      time: time
+    })
+  },
+  addRecord: (record: RecordDto) => {
+    set({
+      records: get().records.concat(record)
     })
   }
 })
 
-export type GameState = SizeState & GridState & ControllerState;
+export type State = SizeState & GridState & ControllerState;
 
-const useStore = create<GameState>((set, get) => ({
+const useStore = create<State>((set, get) => ({
   ...createSize(set, get),
   ...createGrid(set, get),
   ...createController(set, get),

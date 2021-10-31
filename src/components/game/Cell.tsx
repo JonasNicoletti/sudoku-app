@@ -2,10 +2,14 @@ import { useState } from "react";
 import useStore from "../../store";
 import Modal from "react-modal";
 import { CSSProperties } from "react";
+import { GameState } from "../../models";
 type CellProps = {
   hasBorder: boolean;
   row: number;
   column: number;
+  value: number;
+  isDeletable: boolean;
+  size: number;
 };
 
 const customStyles = {
@@ -26,11 +30,10 @@ const getReadableValue = (value: number) => {
   return value === 0 ? "" : value;
 };
 
-function Cell({ row, column, hasBorder }: CellProps) {
+function Cell({ row, column, hasBorder, value, isDeletable, size }: CellProps) {
   Modal.setAppElement("#root");
-  const { getCell, setCell, size, isNew } = useStore((state) => state);
+  const { setCell, state } = useStore();
   const [isActive, setIsActive] = useState(false);
-  const { value, isDeletable } = getCell(row, column);
   const dial = [];
 
   for (let index = 0; index < size + 1; index++) {
@@ -53,7 +56,9 @@ function Cell({ row, column, hasBorder }: CellProps) {
       } ${isDeletable ? "" : "fix"}`}
       onClick={() => setIsActive(isDeletable && !isActive)}
     >
-      <span className={isNew ? "blur" : ""}>{getReadableValue(value)}</span>
+      <span className={state === GameState.NEW ? "blur" : ""}>
+        {getReadableValue(value)}
+      </span>
       <Modal
         isOpen={isActive}
         onAfterClose={() => setIsActive(false)}

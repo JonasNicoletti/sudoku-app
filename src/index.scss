@@ -13,6 +13,26 @@ body {
 .app {
   display: flex;
   width: 90%;
+  & .left-side {
+    display: flex;
+    flex-direction: column;
+    margin-left: 1rem;
+    & .record-entry {
+      margin-left: 0.5rem;
+      display: flex;
+      align-items: baseline;
+      margin-bottom: -1.5rem;
+      & h4 {
+        margin-right: 1rem;
+      }
+      & h3 {
+        margin-right: 0.5rem;
+      }
+      & p {
+        font-weight: 500;
+      }
+    }
+  }
 }
 .grid {
   margin: 1rem;
@@ -29,14 +49,12 @@ body {
     width: 90%;
   }
 }
-.control-panel {
-  margin-left: 1rem;
-}
 .control-panel-header {
   display: flex;
   flex-direction: row;
-  h2 {
-    margin-right: 1rem;
+  h3 {
+    text-transform: uppercase;
+    line-height: 1rem;
   }
 }
 .button-controller-button {
@@ -122,6 +140,7 @@ body {
   position: relative;
   /*background: green;*/
   overflow: hidden;
+  margin-right: 1rem;
 }
 
 .clock::before,
@@ -145,6 +164,15 @@ body {
 }
 .tick-hidden {
   opacity: 0;
+}
+
+.hint_plus {
+  font-size: 1rem;
+  color: green;
+}
+.hint_seconds {
+  font-size: 1rem;
+  color: green;
 }
 
 .move {
