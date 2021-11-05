@@ -2,7 +2,7 @@ import create from "zustand"
 import { mountStoreDevtool } from 'simple-zustand-devtools';
 import { GetState, SetState } from "zustand";
 
-import { CellModel, GameDto, GameSize, GameState, RecordDto } from "./models"
+import { CellModel, GameDto, GameMode, GameSize, GameState, ModalState, RecordDto } from "./models"
 import { isValidValue, isGameSolved, getEmptyGrid, gridToGameModel } from "./utils/grid-operations";
 import axios from "axios";
 
@@ -17,6 +17,7 @@ interface SizeState {
   size: GameSize;
   setSize: (size: GameSize) => void;
 }
+
 const createSize = (set: SetState<State>, get: GetState<State>) => ({
   size: INITIAL_SIZE,
   setSize: (size: GameSize) => {
@@ -75,7 +76,10 @@ const createGrid = (set: SetState<State>, get: GetState<State>) => ({
 })
 
 interface ControllerState {
+  mode: GameMode;
   state: GameState;
+  modalState: ModalState;
+  setModalState: (v: ModalState) => void;
   time: number;
   hints: number;
   setState: (state: GameState, gameId?: string) => void;
@@ -85,7 +89,14 @@ interface ControllerState {
 }
 
 const createController = (set: SetState<State>, get: GetState<State>) => ({
+  mode: GameMode.SOLO,
   state: GameState.EMPTY,
+  modalState: ModalState.NONE,
+  setModalState: (v: ModalState) => {
+    set({
+      modalState: v
+    })
+  },
   time: 0,
   hints: 0,
   setState: async (state: GameState, gameId?: string) => {

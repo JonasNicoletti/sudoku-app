@@ -19,7 +19,7 @@ function Timer() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
   return (
-    <div className="clock">
+    <div className="relative overflow-hidden mr-1 flex h3 text-base after:content-[''] before:content-['']">
       <div className="minutes">
         <div className="first">
           <div className="number">{Math.floor(minutes / 10)}</div>

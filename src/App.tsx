@@ -1,27 +1,17 @@
 import { QueryClient, QueryClientProvider } from "react-query";
-import { BrowserRouter as Router, Route } from "react-router-dom";
-import ControlPanel from "./components/control-panel";
 import Game from "./components/game";
-import LeaderBoard from "./components/leaderboard";
+import Header from "./components/header";
+import ChallengeInitializer from "./components/modals/ChallengeInitializer";
+import SoloInitializer from "./components/modals/SoloInitializer";
 
 function App() {
   const queryClient = new QueryClient();
   return (
     <QueryClientProvider client={queryClient}>
-      <Router>
-        <div className="app">
-          <Route path="/:id">
-            <Game />
-          </Route>
-          <Route exact path="/">
-            <Game />
-          </Route>
-          <div className="left-side">
-            <ControlPanel />
-            <LeaderBoard />
-          </div>
-        </div>
-      </Router>
+      <Header />
+      <Game />
+      <ChallengeInitializer />
+      <SoloInitializer />
     </QueryClientProvider>
   );
 }

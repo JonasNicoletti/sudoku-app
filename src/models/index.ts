@@ -5,6 +5,13 @@ export enum GameSize {
   // large = 16,
 }
 
+export enum ModalState {
+  LOADING,
+  SOLO,
+  CHALLENGE,
+  NONE,
+};
+
 export interface CellModel {
   value: number
   isDeletable: boolean
@@ -31,6 +38,11 @@ export enum GameState {
   NEW,
   FETCHING,
   FINISHED
+}
+
+export enum GameMode {
+  SOLO,
+  CHALLENGE
 }
 
 export interface GameModel {

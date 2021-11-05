@@ -23,8 +23,10 @@ function Row({ index, row }: RowProps) {
     cellGrid.push(cell);
   }
   return (
-    <div className={isSection(index, row.length) ? "row border" : "row"}>
-      {cellGrid.map((c) => c)}
+    <div className="border border-gray-800">
+      <div className={`grid grid-cols-${Math.sqrt(row.length)}`}>
+        {cellGrid.map((c) => c)}
+      </div>
     </div>
   );
 }

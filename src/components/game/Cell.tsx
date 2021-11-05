@@ -1,8 +1,6 @@
 import { useState } from "react";
 import useStore from "../../store";
 import Modal from "react-modal";
-import { CSSProperties } from "react";
-import { GameState } from "../../models";
 type CellProps = {
   hasBorder: boolean;
   row: number;
@@ -12,27 +10,13 @@ type CellProps = {
   size: number;
 };
 
-const customStyles = {
-  content: {
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)",
-    display: "flex",
-    justifyContent: "space-around",
-    flexWrap: "wrap",
-  } as CSSProperties, // due flexWrap is not a valid type of Modal.Styles
-};
-
 const getReadableValue = (value: number) => {
   return value === 0 ? "" : value;
 };
 
-function Cell({ row, column, hasBorder, value, isDeletable, size }: CellProps) {
+function Cell({ row, column, value, isDeletable, size }: CellProps) {
   Modal.setAppElement("#root");
-  const { setCell, state } = useStore();
+  const { setCell } = useStore();
   const [isActive, setIsActive] = useState(false);
   const dial = [];
 
@@ -51,21 +35,17 @@ function Cell({ row, column, hasBorder, value, isDeletable, size }: CellProps) {
   }
   return (
     <div
-      className={`cell ${hasBorder ? "border" : ""} ${
-        isActive ? "active" : ""
-      } ${isDeletable ? "" : "fix"}`}
+      className="border border-gray-800"
       onClick={() => setIsActive(isDeletable && !isActive)}
     >
-      <span className={state === GameState.NEW ? "blur" : ""}>
+      <span
+        className={
+          `${isDeletable ? null : "font-bold "}` +
+          " h-8 w-8 lg:w-16 lg:h-16 md:w-12 md:h-12 flex items-center justify-center"
+        }
+      >
         {getReadableValue(value)}
       </span>
-      <Modal
-        isOpen={isActive}
-        onAfterClose={() => setIsActive(false)}
-        style={customStyles}
-      >
-        {dial.map((d) => d)}
-      </Modal>
     </div>
   );
 }
