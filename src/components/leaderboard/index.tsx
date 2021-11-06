@@ -6,17 +6,16 @@ function LeaderBoard() {
 
   return (
     <div>
-      <h2>Leaderboard </h2>
       {records.length ? (
         records.map((record, i) => (
-          <div className="record-entry" key={i}>
-            <h4>{i + 1}.</h4>
-            <h3>{toTime(record.score)}</h3>
+          <div className="flex ml-3" key={i}>
+            <h4 className="mr-4">{i + 1}.</h4>
+            <h3 className="mr-2">{toTime(record.score)}</h3>
             <p>{record.userName}</p>
           </div>
         ))
       ) : (
-        <div className="record-entry">
+        <div className="rlex ml-3">
           <p>
             <i>Nobody finished this game yet </i>
           </p>

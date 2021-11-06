@@ -1,7 +1,5 @@
-import React from "react";
 import { ModalState } from "../../models";
 import useStore from "../../store";
-import Timer from "../control-panel/timer";
 import HeaderButton from "./HeaderButton";
 import NavItem from "./NavItem";
 

@@ -3,13 +3,17 @@ import Game from "./components/game";
 import Header from "./components/header";
 import ChallengeInitializer from "./components/modals/ChallengeInitializer";
 import SoloInitializer from "./components/modals/SoloInitializer";
+import RightSidePanel from "./components/right-side-panel";
 
 function App() {
   const queryClient = new QueryClient();
   return (
     <QueryClientProvider client={queryClient}>
       <Header />
-      <Game />
+      <div className="grid xs:grid-cols-1 grid-cols-2 gap-2">
+        <Game />
+        <RightSidePanel />
+      </div>
       <ChallengeInitializer />
       <SoloInitializer />
     </QueryClientProvider>

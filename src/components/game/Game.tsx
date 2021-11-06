@@ -29,15 +29,15 @@ function Game() {
     gameGrid.push(<Row key={rowIndex} index={rowIndex} row={grid[rowIndex]} />);
   }
   return (
-    <div className="flex p-4 ml-8 h-full items-center">
+    <div className="flex m-auto h-full items-center">
       <div
-        id="grid"
         className={`grid grid-cols-${Math.sqrt(
           grid.length
         )} border-2 border-gray-800`}
       >
         {gameGrid.map((row) => row)}
       </div>
+      <div></div>
       <Modal
         isOpen={state === GameState.FINISHED}
         onAfterClose={() => setState(GameState.EMPTY)}
