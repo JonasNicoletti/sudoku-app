@@ -2,6 +2,7 @@ import React, { createRef } from "react";
 import { createPopper } from "@popperjs/core";
 import useOutsideClick from "../../utils/outside-click";
 import CellInput from "./CellInput";
+import useStore from "../../store";
 
 type CellProps = {
   hasBorder: boolean;
@@ -17,6 +18,8 @@ const getReadableValue = (value: number) => {
 };
 
 function Cell({ row, column, value, isDeletable, size }: CellProps) {
+  const setCell = useStore((s) => s.setCell);
+
   const [popoverShow, setPopoverShow] = React.useState(false);
   const cellRef = createRef<HTMLDivElement>();
   const popoverRef = createRef<HTMLDivElement>();
@@ -31,6 +34,10 @@ function Cell({ row, column, value, isDeletable, size }: CellProps) {
   };
   const closePopover = () => {
     setPopoverShow(false);
+  };
+  const onValueChange = (value: number) => {
+    setCell(row, column, value);
+    closePopover();
   };
   useOutsideClick(cellRef, () => closePopover());
   return (
@@ -62,7 +69,10 @@ function Cell({ row, column, value, isDeletable, size }: CellProps) {
         }
         ref={popoverRef}
       >
-        <CellInput size={size} closePopup={() => closePopover()} />
+        <CellInput
+          size={size}
+          onClick={(newValue) => onValueChange(newValue)}
+        />
       </div>
     </>
   );
