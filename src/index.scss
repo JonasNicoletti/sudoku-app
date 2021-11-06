@@ -19,6 +19,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.active-shadow {
+  box-shadow: rgba(78, 207, 38, 0.685) 0px 30px 60px -12px inset,
+    rgba(27, 230, 9, 0.3) 0px 18px 36px -18px inset;
+}
+
 .clock {
   height: 3rem;
   font-size: 3rem;

@@ -37,7 +37,6 @@ function Game() {
       >
         {gameGrid.map((row) => row)}
       </div>
-      <div></div>
       <Modal
         isOpen={state === GameState.FINISHED}
         onAfterClose={() => setState(GameState.EMPTY)}
