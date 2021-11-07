@@ -48,7 +48,7 @@ const createGrid = (set: SetState<State>, get: GetState<State>) => ({
       grid: gridToGameModel(grid),
       gameId: id,
       records: records,
-      state: GameState.NEW,
+      state: GameState.RUNNING,
       size: size
     }))
   },
