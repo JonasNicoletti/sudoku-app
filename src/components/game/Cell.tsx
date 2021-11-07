@@ -5,7 +5,8 @@ import CellInput from "./CellInput";
 import useStore from "../../store";
 
 type CellProps = {
-  hasBorder: boolean;
+  hasBottomBorder: boolean;
+  hasRightBorder: boolean;
   row: number;
   column: number;
   value: number;
@@ -17,7 +18,7 @@ const getReadableValue = (value: number) => {
   return value === 0 ? "" : value;
 };
 
-function Cell({ row, column, value, isDeletable, size }: CellProps) {
+function Cell({ row, column, value, isDeletable, size, hasBottomBorder, hasRightBorder }: CellProps) {
   const setCell = useStore((s) => s.setCell);
 
   const [popoverShow, setPopoverShow] = React.useState(false);
@@ -40,12 +41,27 @@ function Cell({ row, column, value, isDeletable, size }: CellProps) {
     closePopover();
   };
   useOutsideClick(cellRef, () => closePopover());
+  const cellBorder = () => {
+    if (hasBottomBorder && hasRightBorder) {
+      return "border-b-2 border-r-2 border-l border-t"
+    }
+    if (hasBottomBorder) {
+      return "border-b-2 border-l border-t border-r"
+    }
+    if (hasRightBorder) {
+      return "border-r-2 border-l border-t border-b"
+    }
+    
+    return "border";
+  };
+  
   return (
     <>
       <div
-        className={`border border-gray-800 ${
-          popoverShow ? "active-shadow" : null
-        }`}
+        className={`border-gray-800 ${
+          popoverShow ? "active-shadow" : ""
+        } ${cellBorder()}
+      `}
         onClick={() => {
           if (isDeletable) {
             openPopover();

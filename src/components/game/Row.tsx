@@ -12,7 +12,8 @@ function Row({ index, row }: RowProps) {
     const cell = (
       <Cell
         key={columnIndex}
-        hasBorder={isSection(columnIndex, row.length)}
+        hasBottomBorder={isSection(index, row.length)}
+        hasRightBorder={isSection(columnIndex, row.length)}
         row={index}
         column={columnIndex}
         size={row.length}
@@ -23,11 +24,9 @@ function Row({ index, row }: RowProps) {
     cellGrid.push(cell);
   }
   return (
-    <div className="border border-gray-800">
-      <div className={`grid grid-cols-${Math.sqrt(row.length)}`}>
+      <div className={`grid grid-cols-${row.length}`}>
         {cellGrid.map((c) => c)}
       </div>
-    </div>
   );
 }
 

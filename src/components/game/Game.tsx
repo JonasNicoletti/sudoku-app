@@ -31,9 +31,9 @@ function Game() {
   return (
     <div className="flex m-auto h-full items-center">
       <div
-        className={`grid grid-cols-${Math.sqrt(
+        className={`grid grid-rows-${
           grid.length
-        )} border-2 border-gray-800`}
+        } border-2 border-gray-800`}
       >
         {gameGrid.map((row) => row)}
       </div>
